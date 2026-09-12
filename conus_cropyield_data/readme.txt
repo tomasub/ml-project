@@ -15,9 +15,9 @@ Input variables
 --------------------
 The time series of the 5 input variables have been obtained for one county/year (rows) and range from April to October (columns): 
 - EVI (enhanced vegetation index): data every 16 days.
-- PRCP: precipitation, monthly.
-- SM (soil moisture): daily data.
-- TMAX (maximum temperature): monthly data.
+- PRCP: precipitation, monthly. (mm)
+- SM (soil moisture): daily data. (Water volume fraction)
+- TMAX (maximum temperature): monthly data. (C)
 - VOD (vegetation optical depth): daily data.
 
 Crop variable
