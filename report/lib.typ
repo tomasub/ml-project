@@ -25,7 +25,7 @@
 
 
   let body-font = "Times New Roman"
-  let body-size = 11pt
+  let body-size = 10pt
   // let heading-font = "Times New Roman"
 
   // heading font is used in this size for kind of "information blocks"

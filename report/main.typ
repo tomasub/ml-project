@@ -25,11 +25,11 @@
 //SET OTHER PARAMS
 #show: it => lab-report(
   doc-context: "insert course here",
-  doc-title: "title",
-  author: "Tomas D'Incau",
+  doc-title: "Modelling crop yields based on early season weather, soil, and growth data",
+  author: "Tomas D'Incau, Alvari Salonen",
   affiliation: "Aalto University",
   logo: image("assets/logo-question.png", width: 4cm),
-  language: "fi",
+  language: "en",
   compact-mode: false,
   it
 )

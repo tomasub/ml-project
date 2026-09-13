@@ -40,7 +40,7 @@
       doc-context),
   )
 
-  text(font: heading-font, weight: "light", size: 36pt,  fill: heading-color,
+  text(font: heading-font, weight: "light", size: 30pt,  fill: heading-color,
     doc-title,
   )
 
