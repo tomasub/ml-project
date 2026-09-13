@@ -11,7 +11,7 @@ prcp_apr, prcp_may, prcp_jun, prcp_july
 sm_ave, sm_95%, sm_5%, (percentiles cushion the dataset and show the effect of soil moisture differences at the dry and moist ends of seasonal soil conditions)
 vod_std (early season change in biomass amount correlates with final yield, variance is independent of local flora differences)
 
-Label: yield (t/ha)
+Label: soybean crop yield (t/ha)
 
 # Data processing
 
