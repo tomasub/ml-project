@@ -47,7 +47,7 @@ A model can be trained to predict the crop yield of a specific crop based on ear
 
 A dataset on CONUS (contiguous Unites States) agricultural details was utilised @martinez-ferrercropyieldestimation2021, @mateo-sanchisinterpretablelongshortterm2023. This dataset includes measurements on corn, wheat, and soy yields, as well as corresponding values for precipitation (monthly), soil moisture (daily), maximum temperature (monthly), VOD (vegetative optical depth, daily), and EVI (enhanced vegetation index, daily). All measurements are continuous in value. Soybean was chosen as the crop of interest for this model as it is a widely grown crop for both human consumption and animal feed. 
 
-From this dataset, datapoints were individual yields for a specific county and a specific year. The years measured were 2015-2018, and there was a datapoint for each of the counties measured for each year. 
+From this dataset, datapoint labels were individual yields for a specific county and a specific year. These were used for a supervised learning application. The years measured were 2015-2018, and there was a datapoint for each of the counties measured for each year. 
 Each datapoint used the soybean crop yield in#unit("t/ha") as a label. 12 features were chosen for the model, with dates ranging from April to end of July:
 + Maximum temperature for each month [#sym.degree$"C"$]
 + Total precipitation for each month [mm]
@@ -81,13 +81,15 @@ Soil moisture was chosen to be represented by three values: the arithmetic mean,
 
 As the label is continuous in value, a regression model was thought to be most suitable for this problem. The co-linearity of some features prompted the the consideration of a model with regularisation. The featured for maximum temperature values and for soil moisture values have strong cross-correlation, but they all still affect crop yields in different ways. A Ridge regression was chosen to account for this problem specifically. 
 
-#emph([Linear regression is used to predict the yield values based on the chosen features. It outputs a continuous variable calculated on the features, with each feature having a specific weight coefficient. A common method to determine the coefficients is the squared error. The issue with an ordinary squared error loss function is the blow-up of coefficients: especially in cases, where some features exhibit co-linearity, they may be assigned extremely large coefficients correcting for each other, which leads to overfitting and high sensitivity.])
+Linear regression is used to predict continuous values based on the chosen features. It outputs a continuous variable calculated on the features, with each feature having a specific weight coefficient. A common method to determine the coefficients is the squared error. The issue with an ordinary squared error loss function is the blow-up of coefficients: especially in cases, where some features exhibit co-linearity, they may be assigned extremely large coefficients correcting for each other, which leads to overfitting and high sensitivity.
 
 Ridge regression adds a penalty term to the squared error loss function based on the square of the coefficients, unlike L1 style regularisation methods such as LASSO. This ensures that no features are regularised to zero coeffients and thus maintains all feature data, while also effectively controlling the scale of the coefficients. The result is an L2 regularised mean squared error loss function. 
 
-K-fold cross-validation ... because the data is in a 4-year split for certain counties ... the random selection of a singular data split could skew training values to favor certain counties or years. The data was also shuffled to randomise years and counties, since by default the data frame regularly cycles thorugh counties and years. 
+All features were normalised using StandardScaler, because some features are on vastly different scales. For the Ridge regression's regularisation to treat all features equally, they must have 0 mean and unit variance. 
 
-Data was split into four sections as it is grouped by year. The latest year was chosen as the tesing set. The remaining three years of data from 2015 to 2017 were used as data in a leave-one-year-out validation method to find the optimal Ridge parameter $alpha$. Values for this hyperparameter were tested over a logarithmic range of 50 values from 0.001 to 100 000.
+Data was split into four sections by year. The latest year was chosen as the tesing set. The remaining three years of data from 2015 to 2017 will be used as data in a k-fold cross validation method with $k=3$, each fold being one year, to find the optimal Ridge parameter $alpha$. Values for this hyperparameter were chosen tested over a logarithmic range of 50 values from 0.001 to 100 000.
+
+After the optimal $alpha$ is determined, the whole training set of data from 2015 to 2017 will be used to train the Ridge regression model.
 
 
 // = Results
@@ -99,11 +101,11 @@ Several large language models by Anthropic (Claude) were utilised in the making 
 + Finding methods for different taks to be completed on the data set from the PANDAS and NUMPY documentations.
 + Error checking and code validation.
 
-
 #bibliography("assets/2026-09-ml-project.bib")
 
+#pagebreak(weak:true)
 = Appendices
 
 #show link: underline
 
-The code for this model can be found on Github by following this #link("link.com", "link").
+The code for this model can be found on Github in the file 'regression_3.ipynb' by following this #link("link.com", "link").
