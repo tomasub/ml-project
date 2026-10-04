@@ -34,6 +34,11 @@
   it
 )
 
+#show figure: it => align(left)[
+  #it.body  
+  #v(10pt, weak: true)
+   #it.caption 
+]
 
 #pagebreak(weak: true)
 
@@ -74,9 +79,10 @@ Maximum temperature values were chosen to be kept as-is despite their high co-li
 Precipitation values were all kept. They have a low co-linearity and acceptably low values for cross-correlation with other features. 
 Soil moisture was chosen to be represented by three values: the arithmetic mean, the 5th percentile, and the 95th percentile. The mean represents overall differences in average soil moisture. The 5th and 95th percentiles take into account exceptionally dry and humid conditions, respectively, while being slightly less susceptible to extreme outliers. The selected features and their cross-correlations are shown in @correlation2.
 
+
 #figure(
-  image("assets/corr_2.jpg", width: 80%),
-  caption: [Pearson cross-correlation matrix of chosen features.]
+  image("assets/corr_2.png", width: 60%),
+  caption: [Pearson cross-correlation matrix of chosen features.],
 )<correlation2>
 
 As the label is continuous in value, a regression model was thought to be most suitable for this problem. The co-linearity of some features prompted the the consideration of a model with regularisation. The featured for maximum temperature values and for soil moisture values have strong cross-correlation, but they all still affect crop yields in different ways. A Ridge regression was chosen to account for this problem specifically. 
@@ -87,7 +93,7 @@ Ridge regression adds a penalty term to the squared error loss function based on
 
 All features were normalised using StandardScaler, because some features are on vastly different scales. For the Ridge regression's regularisation to treat all features equally, they must have 0 mean and unit variance. 
 
-Data was split into four sections by year. The latest year was chosen as the tesing set. The remaining three years of data from 2015 to 2017 will be used as data in a k-fold cross validation method with $k=3$, each fold being one year, to find the optimal Ridge parameter $alpha$. Values for this hyperparameter were chosen tested over a logarithmic range of 50 values from 0.001 to 100 000.
+Data was split into four sections by year. The latest year was chosen as the tesing set. The remaining three years of data from 2015 to 2017 will be used as data in a k-fold cross validation method with $k=3$, each fold being one year, to find the optimal Ridge parameter $alpha$. Values for this hyperparameter were chosen tested over a logarithmic range of 20 values from 0.01 to 100 000.
 
 After the optimal $alpha$ is determined, the whole training set of data from 2015 to 2017 will be used to train the Ridge regression model.
 
@@ -108,4 +114,4 @@ Several large language models by Anthropic (Claude) were utilised in the making 
 
 #show link: underline
 
-The code for this model can be found on Github in the file 'regression_3.ipynb' by following this #link("link.com", "link").
+The code for this model can be found on Github in the file 'regression_3.ipynb' by following this #link("https://github.com/tomasub/ml-project", "link").
