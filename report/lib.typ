@@ -66,8 +66,8 @@
 
   set par(
     justify: true,
-    leading: 0.75em,
-    spacing: 1.65em,
+    leading: 0.6em,
+    spacing: 1.2em,
     first-line-indent: 0em,
   )
 
@@ -80,7 +80,7 @@
   
   set page(               // standard page with footer
     paper: "a4",
-    margin: (top: 3cm, left: 3cm, right: 3cm, bottom: 3.6cm),
+    margin: (top: 3cm, left: 2.5cm, right: 2.5cm, bottom: 3.6cm),
     // the header shows the main chapter heading on the left and the page number on the right
 
  //   header: context {
@@ -142,10 +142,10 @@
 
 
   show heading.where(level: 1): it => {
-    v(3.8 * body-size, weak: true) + text(it) + v(1.5 * body-size)
+    v(2 * body-size, weak: true) + text(it) + v(1 * body-size)
   }
   show heading.where(level: 2): it => {
-    v(0.8 * body-size) + text(it) + v(1 * body-size)
+    v(0.4 * body-size) + text(it) + v(0.6 * body-size)
   }
   show heading.where(level: 3): it => {
     v(0.8 * body-size) + text(it) + v(0.7 * body-size)

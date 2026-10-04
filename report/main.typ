@@ -89,13 +89,9 @@ Soil moisture was chosen to be represented by three values: the arithmetic mean,
 
 == Ridge regression
 
-As the label is continuous in value, a regression model was thought to be most suitable for this problem. The co-linearity of some features prompted the the consideration of a model with regularisation. The featured for maximum temperature values and for soil moisture values have strong cross-correlation, but they all still affect crop yields in different ways. A Ridge regression was chosen to account for this problem specifically. 
+As the label is continuous in value, a regression model was thought to be most suitable for this problem. The co-linearity of some features prompted the the consideration of a model with regularisation. The featured for maximum temperature values and for soil moisture values have strong cross-correlation, but they all still affect crop yields in different ways. A Ridge regression was chosen to account for this problem specifically. Linear regression is used to predict continuous values based on the chosen features. It outputs a continuous variable calculated on the features, with each feature having a specific weight coefficient. A common method to determine the coefficients is the squared error. The issue with an ordinary squared error loss function is the blow-up of coefficients: especially in cases, where some features exhibit co-linearity, they may be assigned extremely large coefficients correcting for each other, which leads to overfitting and high sensitivity. Ridge regression adds a penalty term to the squared error loss function based on the square of the coefficients, unlike L1 style regularisation methods such as LASSO. This ensures that no features are regularised to zero coeffients and thus maintains all feature data, while also effectively controlling the scale of the coefficients. The result is an L2 regularised mean squared error loss function. 
 
-Linear regression is used to predict continuous values based on the chosen features. It outputs a continuous variable calculated on the features, with each feature having a specific weight coefficient. A common method to determine the coefficients is the squared error. The issue with an ordinary squared error loss function is the blow-up of coefficients: especially in cases, where some features exhibit co-linearity, they may be assigned extremely large coefficients correcting for each other, which leads to overfitting and high sensitivity.
-
-Ridge regression adds a penalty term to the squared error loss function based on the square of the coefficients, unlike L1 style regularisation methods such as LASSO. This ensures that no features are regularised to zero coeffients and thus maintains all feature data, while also effectively controlling the scale of the coefficients. The result is an L2 regularised mean squared error loss function. 
-
-All features were normalised using StandardScaler, because some features are on vastly different scales. For the Ridge regression's regularisation to treat all features equally, they must have 0 mean and unit variance. 
+All features were normalised using StandardScaler, because some are on vastly different scales. For the Ridge regression's regularisation to treat all features equally, they must have 0 mean and unit variance. 
 
 Data was split into four sections by year to ensure that the counties would be distributed as evenly as possible. The latest year was chosen as the tesing set. The remaining three years of data from 2015 to 2017 will be used as data in a k-fold cross validation method with $k=3$, each fold being one year, to find the optimal Ridge parameter $alpha$. Values for this hyperparameter were chosen tested over a logarithmic range of 20 values from 0.01 to 100 000.
 
@@ -103,12 +99,25 @@ After the optimal $alpha$ is determined, the whole training set of data from 201
 
 == Logistic regression
 
-The problem was also attempted to be solved using a classification model. The model used the same features as the regression model, however, as a label, a measure of whether the yield of a year is 'better than usual' or 'worse than usual' was chosen. This label was calculated by determining the mean yield for each county in the years 2015-2017, and subtracting it from the real yield for each applicable datapoint. The resulting values, 'yield_anomaly', were used then to classify the year as 'good' or 'bad' based on whether the anomaly was positive or negative, respectively.
+The problem was also attempted to be solved using a classification model. The model used the same features as the regression model, however, as a label, a measure of whether the yield of a year is 'better than usual' or 'worse than usual' was chosen. This label was calculated by determining the mean yield for each county in the years 2015-2017, and subtracting it from the real yield for each applicable datapoint. The resulting values, 'yield_anomaly', were used then to classify the year as 'good' or 'bad' (1 or 0) based on whether the anomaly was positive or negative, respectively.
 
+Logistic regression uses the log loss function to fit coefficents. MSE loss is not suitable for a categorical label. 
+
+The same four-year data split was used for the logistic regression for reasons discussed above. The logistic regression was trained with a k-fold cross validation with $k=3$ to find the optimal parameter $C$. To score each parameter choice, balanced accuracy was used as it ranks the parameter choices based on their scoring accuracy, and functions in an environment where the classes are imbalanced. The optimal choice of $C$ was used to train the model.
 
 = Results <results>
 
+The predicted labels for the ridge regression were compared to the real labels of the testing set, and were found to correlate at $"R"^2≈0.086$ and with a negative root mean squared error of approximately $2.13$. The model settled on an $alpha$ value of around $264$, i.e. a regularisation term within the tested grid, not pushing the coefficients to either extreme. Regularisation resulted in moderate shrinkage, mainly because of the cross-correlated soil moisture and temperature features. The low correlation value, however, shows that this model is barely better than a constant prediction and hardly of any use in predicting crop yields, and it reflects mostly between-county differences rather than season-to-season variation.
+
+The training process of the logistic regression resulted in a $C$ value of $0.0001$. As this is the smalles value available for the model, no regularisation strength was found to give the logistic model better-than-chance performance on a held-out season, and all CV scores fall below the 'random-chance' $0.5$ threshold. The model defaulted to the class prior, and decided to rank all counties to a positive yield anomaly for the testing year, as the training data contained more positive anomalies than negative anomalies. This resulted in an accuracy score of around 59%, given that around 59% of the labels in the testing set were of positive nature.   
+
 = Conclusion
+
+The results strongly highlight the limitations of our dataset. While over 2000 individual datapoints is a good amount for model training, there is a dire need for data over a longer time period and different seasonal conditions. Training models on only three seasons to predict a fourth resulted in the weather differences being practically negligible in yield prediction. A dataset from fewer counties but a longer time period would yield more applicable models. 
+
+The label choice for the regression model keeps locational variances in crop yields, as it predicts yield for a datapoint directly. This worsens the models generalisability due to inherent differneces between counties not accounted for in the model, such as soil quality, nutrient density, farming practices, #emph("et cetera").
+
+Given that only one datapoint can be collected per season in each location, the data collection period would need to be extemely long, over a decade at least. Thus creating a functional model for this application would be very time-consuming. Perchance.
 
 = Use of AI
 
