@@ -42,11 +42,13 @@
 
 #pagebreak(weak: true)
 
-// = Introduction
+= Introduction
 
-/*Year after year, climate change renders acres of farmland unsuitable for agricultural use @youclimatedrivenglobalcropland2025. At the same time, global food demand is increasing with rising food waste amounts and the global population count @oecdoecdfaoagriculturaloutlook2025. Maintaining a livable planet and secured food supplies for the forseeable future will necessitate a shift from animal-based foods to more plant- and crop-based options. Even barring this shift, with massive animal agriculture occurring worldwide, the need for crops for animal feed is at an all time high. Future food production chains require rigorous optimisation and modelling systems to enable food security, and with drastic weather events year by year and changing conditions, being able to model end-of-season harvest based on early-season conditions enables food producers to plan ahead and optimise their logistics, storage spaces, and pricing/marketing systems to account for the amount of grain. */
+Year after year, climate change renders acres of farmland unsuitable for agricultural use @youclimatedrivenglobalcropland2025. At the same time, global food demand is increasing with rising food waste amounts and the global population count @oecdoecdfaoagriculturaloutlook2025. Maintaining a livable planet and secured food supplies for the forseeable future will necessitate a shift from animal-based foods to more plant- and crop-based options. Even barring this shift, with massive animal agriculture occurring worldwide, the need for crops for animal feed is at an all time high. Future food production chains require rigorous optimisation and modelling systems to ensure food security, and with drastic weather events occurring year after year and conditions chanigng rapidly, being able to model end-of-season harvest based on early-season conditions enables food producers to plan ahead and optimise their logistics, storage spaces, and pricing or marketing systems to account for the amount of grain.
 
-= Problem formulation
+This report presents a dataset for soybean crop yields and weather conditions as well as the feature selection process and problem formulation (@formulation), and attempts to apply two different models, a Ridge regression and a logistic regression, to solve this issue (@methods). It outlines the results and the limitations of the data (@results).
+
+= Problem formulation <formulation>
 
 A model can be trained to predict the crop yield of a specific crop based on early-season (Apr-Jul) conditions. While a regression model is best for this task, the question whether to regularise the model arises. 
 
@@ -60,7 +62,7 @@ Each datapoint used the soybean crop yield in#unit("t/ha") as a label. 12 featur
 + The 95th percentile and 5th percentile of soil moisture measurements #unit($[m^3 dot m^(-3)]$)
 + Standard deviation of VOD
 
-= Methods
+= Methods <methods>
 
 The dataset contains 2060 datapoints, split into 515 datapoints per year, one per each county. Given the even spread of 4 datapoints per county, all datapoints were treated equally. First the data was cropped to include values only for the time period from start of April to end of July. Maximum temperature measurements and precipitation measurements were combined into one csv file with the label vector. Soil moisture and VOD were processed as separate csv files due to the large number of measurements.
 
@@ -85,6 +87,8 @@ Soil moisture was chosen to be represented by three values: the arithmetic mean,
   caption: [Pearson cross-correlation matrix of chosen features.],
 )<correlation2>
 
+== Ridge regression
+
 As the label is continuous in value, a regression model was thought to be most suitable for this problem. The co-linearity of some features prompted the the consideration of a model with regularisation. The featured for maximum temperature values and for soil moisture values have strong cross-correlation, but they all still affect crop yields in different ways. A Ridge regression was chosen to account for this problem specifically. 
 
 Linear regression is used to predict continuous values based on the chosen features. It outputs a continuous variable calculated on the features, with each feature having a specific weight coefficient. A common method to determine the coefficients is the squared error. The issue with an ordinary squared error loss function is the blow-up of coefficients: especially in cases, where some features exhibit co-linearity, they may be assigned extremely large coefficients correcting for each other, which leads to overfitting and high sensitivity.
@@ -93,13 +97,19 @@ Ridge regression adds a penalty term to the squared error loss function based on
 
 All features were normalised using StandardScaler, because some features are on vastly different scales. For the Ridge regression's regularisation to treat all features equally, they must have 0 mean and unit variance. 
 
-Data was split into four sections by year. The latest year was chosen as the tesing set. The remaining three years of data from 2015 to 2017 will be used as data in a k-fold cross validation method with $k=3$, each fold being one year, to find the optimal Ridge parameter $alpha$. Values for this hyperparameter were chosen tested over a logarithmic range of 20 values from 0.01 to 100 000.
+Data was split into four sections by year to ensure that the counties would be distributed as evenly as possible. The latest year was chosen as the tesing set. The remaining three years of data from 2015 to 2017 will be used as data in a k-fold cross validation method with $k=3$, each fold being one year, to find the optimal Ridge parameter $alpha$. Values for this hyperparameter were chosen tested over a logarithmic range of 20 values from 0.01 to 100 000.
 
 After the optimal $alpha$ is determined, the whole training set of data from 2015 to 2017 will be used to train the Ridge regression model.
 
+== Logistic regression
 
-// = Results
-// = Conclusion
+The problem was also attempted to be solved using a classification model. The model used the same features as the regression model, however, as a label, a measure of whether the yield of a year is 'better than usual' or 'worse than usual' was chosen. This label was calculated by determining the mean yield for each county in the years 2015-2017, and subtracting it from the real yield for each applicable datapoint. The resulting values, 'yield_anomaly', were used then to classify the year as 'good' or 'bad' based on whether the anomaly was positive or negative, respectively.
+
+
+= Results <results>
+
+= Conclusion
+
 = Use of AI
 
 Several large language models by Anthropic (Claude) were utilised in the making of this project for assistance and automation in the following tasks:
