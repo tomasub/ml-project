@@ -143,4 +143,4 @@ Large language models by Anthropic (Claude) were used in the making of this proj
 
 #show link: underline
 
-The code for this model can be found on Github in the file 'regression_3.ipynb' by following this #link("https://github.com/tomasub/ml-project", "link").
+The code for this model can be found in the file 'code_final.ipynb' by following this #link("https://anonymous.4open.science/r/ml-project-6407/code_final.ipynb", "link").
